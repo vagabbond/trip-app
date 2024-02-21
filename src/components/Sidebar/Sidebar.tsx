@@ -14,7 +14,7 @@ import {
  Svg,
 } from "./Sidebar.styled";
 import { IoClose } from "react-icons/io5";
-import sprite from "../../assets/images/icons/symbol-defs.svg";
+import sprite from "../../../public/assets/images/icons/symbol-defs.svg";
 import { WiCelsius } from "react-icons/wi";
 
 import { ITrip } from "../../interfaces/ITrip";

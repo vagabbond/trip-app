@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { WeatherLi, Svg, WeatherTitle, WeatherDate } from "./Weather.styled";
-import sprite from "../../assets/images/icons/symbol-defs.svg";
+import sprite from "../../../public/assets/images/icons/symbol-defs.svg";
 
 import { IConditions } from "../../interfaces/ITrip";
 
