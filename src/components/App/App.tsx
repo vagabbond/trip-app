@@ -46,7 +46,6 @@ const App: FC = () => {
  );
  const user = useAppSelector((state) => state.user.user);
 
- console.log(trips, tripsLoading, weatherLoading);
  const filtredTips = trips.filter((item: ITrip) =>
   item.location.toLocaleLowerCase().includes(search)
  );
