@@ -21,10 +21,12 @@ import { ITrip } from "../../interfaces/ITrip";
 
 import { calculateTime } from "../../func/calculateTime";
 import { getDayOfTheWeek } from "../../func/getDayOfTheWeek";
+import { useAppSelector } from "../../redux/store";
 
 interface ISidebarProps {
- trip: ITrip;
+ id: string;
  callback: () => void;
+ loading: boolean;
 }
 
 export interface ITimeState {
@@ -33,13 +35,15 @@ export interface ITimeState {
  minutes: number;
  seconds: number;
 }
-const Sidebar: FC<ISidebarProps> = ({ trip, callback }) => {
+const Sidebar: FC<ISidebarProps> = ({ id, callback, loading }) => {
  const [time, setTime] = useState<ITimeState>({
   days: 0,
   hours: 0,
   minutes: 0,
   seconds: 0,
  });
+    const { trips } = useAppSelector((state) => state.trips);
+    const trip = trips.find((item: ITrip) => item.id === id);
  const { location, weather, startDate } = trip;
  const dayOfWeek = getDayOfTheWeek(startDate);
 
@@ -65,40 +69,46 @@ const Sidebar: FC<ISidebarProps> = ({ trip, callback }) => {
    <AppSideBarBtnClose type={"button"} onClick={callback}>
     <IoClose size={30} color="white" />
    </AppSideBarBtnClose>
-   <AppSidiBarInfo>
-    <AppSideBarTitle>{dayOfWeek}</AppSideBarTitle>
-    <AppSideBarInfoWrapper>
-     <Svg>
-      <use href={`${sprite}#icon-${weather.currentConditions?.icon}`} />
-     </Svg>
-     <AppSidiBarInfoDegre>
-      {weather.currentConditions?.temp &&
-       `${Math.ceil(((weather.currentConditions?.temp - 32) * 5) / 9)}`}
-      <span>
-       <WiCelsius />
-      </span>
-     </AppSidiBarInfoDegre>
-    </AppSideBarInfoWrapper>
-    <AppSidiBarInfoText>{location}</AppSidiBarInfoText>
-   </AppSidiBarInfo>
-   <AppSideBarTimer>
-    <SideBarTimerItem>
-     <SideBarTimerItemValue>{time.days}</SideBarTimerItemValue>
-     <SideBarTimerItemText>days</SideBarTimerItemText>
-    </SideBarTimerItem>
-    <SideBarTimerItem>
-     <SideBarTimerItemValue>{time.hours}</SideBarTimerItemValue>
-     <SideBarTimerItemText>hours</SideBarTimerItemText>
-    </SideBarTimerItem>
-    <SideBarTimerItem>
-     <SideBarTimerItemValue>{time.minutes}</SideBarTimerItemValue>
-     <SideBarTimerItemText>minutes</SideBarTimerItemText>
-    </SideBarTimerItem>
-    <SideBarTimerItem>
-     <SideBarTimerItemValue>{time.seconds}</SideBarTimerItemValue>
-     <SideBarTimerItemText>seconds</SideBarTimerItemText>
-    </SideBarTimerItem>
-   </AppSideBarTimer>
+   {loading ? (
+    <AppSidiBarInfoText>Loading...</AppSidiBarInfoText>
+   ) : (
+    <>
+     <AppSidiBarInfo>
+      <AppSideBarTitle>{dayOfWeek}</AppSideBarTitle>
+      <AppSideBarInfoWrapper>
+       <Svg>
+        <use href={`${sprite}#icon-${weather.currentConditions?.icon}`} />
+       </Svg>
+       <AppSidiBarInfoDegre>
+        {weather.currentConditions?.temp &&
+         `${Math.ceil(((weather.currentConditions?.temp - 32) * 5) / 9)}`}
+        <span>
+         <WiCelsius />
+        </span>
+       </AppSidiBarInfoDegre>
+      </AppSideBarInfoWrapper>
+      <AppSidiBarInfoText>{location}</AppSidiBarInfoText>
+     </AppSidiBarInfo>
+     <AppSideBarTimer>
+      <SideBarTimerItem>
+       <SideBarTimerItemValue>{time.days}</SideBarTimerItemValue>
+       <SideBarTimerItemText>days</SideBarTimerItemText>
+      </SideBarTimerItem>
+      <SideBarTimerItem>
+       <SideBarTimerItemValue>{time.hours}</SideBarTimerItemValue>
+       <SideBarTimerItemText>hours</SideBarTimerItemText>
+      </SideBarTimerItem>
+      <SideBarTimerItem>
+       <SideBarTimerItemValue>{time.minutes}</SideBarTimerItemValue>
+       <SideBarTimerItemText>minutes</SideBarTimerItemText>
+      </SideBarTimerItem>
+      <SideBarTimerItem>
+       <SideBarTimerItemValue>{time.seconds}</SideBarTimerItemValue>
+       <SideBarTimerItemText>seconds</SideBarTimerItemText>
+      </SideBarTimerItem>
+     </AppSideBarTimer>
+    </>
+   )}
   </AppSideBar>
  );
 };

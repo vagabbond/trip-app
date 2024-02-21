@@ -41,9 +41,12 @@ const App: FC = () => {
  const [modal, toggleModal] = useState(false);
  const [checked, setChecked] = useState(false);
 
- const trips = useAppSelector((state) => state.trips.trips);
+ const { trips, tripsLoading, weatherLoading } = useAppSelector(
+  (state) => state.trips
+ );
  const user = useAppSelector((state) => state.user.user);
 
+ console.log(trips, tripsLoading, weatherLoading);
  const filtredTips = trips.filter((item: ITrip) =>
   item.location.toLocaleLowerCase().includes(search)
  );
@@ -55,6 +58,7 @@ const App: FC = () => {
      return dateB - dateA;
     })
   : filtredTips;
+
  const dispatch = useAppDispatch();
 
  useEffect(() => {
@@ -113,7 +117,7 @@ const App: FC = () => {
 
      <div>
       <AppTripContainer>
-       {sortedTrips.length > 0 ? (
+       {sortedTrips.length > 0 && !tripsLoading ? (
         <AppList gap={"20px"}>
          {sortedTrips.map((trip: ITrip) => {
           return <Trip trip={trip} callback={setSelectedTrip} key={trip.id} />;
@@ -159,7 +163,13 @@ const App: FC = () => {
     </div>
    </AppContainer>
    {modal && <Modal callback={toggleModal} />}
-   {selectedTrip && <Sidebar trip={selectedTrip} callback={closeSidebar} />}
+   {selectedTrip && (
+    <Sidebar
+     id={selectedTrip.id}
+     callback={closeSidebar}
+     loading={weatherLoading}
+    />
+   )}
   </Main>
  );
 };
